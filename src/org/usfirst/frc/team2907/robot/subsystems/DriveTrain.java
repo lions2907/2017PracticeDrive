@@ -2,7 +2,7 @@ package org.usfirst.frc.team2907.robot.subsystems;
 
 import org.usfirst.frc.team2907.robot.Robot;
 import org.usfirst.frc.team2907.robot.RobotMap;
-import org.usfirst.frc.team2907.robot.commands.MechDrive;
+import org.usfirst.frc.team2907.robot.commands.ArcadeDrive;
 
 import com.ctre.CANTalon;
 import com.kauailabs.navx.frc.AHRS;

@@ -2,6 +2,7 @@ package org.usfirst.frc.team2907.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc.team2907.robot.commands.ExampleCommand;
 
