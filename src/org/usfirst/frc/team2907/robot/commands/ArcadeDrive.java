@@ -21,7 +21,9 @@ public class ArcadeDrive extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.driveTrain.getRobotDrive().arcadeDrive(Robot.oi.leftStick.getY(), Robot.oi.leftStick.getTwist());
+//    	System.out.println("Twist : " + Robot.oi.leftStick.getTwist() + ", x : " + Robot.oi.leftStick.getX());
+    	Robot.driveTrain.getRobotDrive().arcadeDrive(-Robot.oi.leftStick.getY(), Robot.oi.leftStick.getZ());
+    	//Robot.driveTrain.extra.set(Robot.oi.leftStick.getZ());
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -31,6 +33,8 @@ public class ArcadeDrive extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	Robot.driveTrain.getRobotDrive().arcadeDrive(0,0);
+    	Robot.driveTrain.extra.set(0);
     }
 
     // Called when another command which requires one or more of the same

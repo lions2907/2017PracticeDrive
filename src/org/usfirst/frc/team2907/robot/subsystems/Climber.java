@@ -20,7 +20,7 @@ public class Climber extends Subsystem {
 	@Override
 	protected void initDefaultCommand() {
 		
-		setDefaultCommand(new ClimberCommand(Robot.oi.leftStick.getTrigger() ? 1 : 0));
+		//setDefaultCommand(new ClimberCommand(Robot.oi.leftStick.getZ()));
 		// TODO Auto-generated method stub
 		
 	}

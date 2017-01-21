@@ -4,7 +4,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
+import org.usfirst.frc.team2907.robot.commands.ClimberCommand;
 import org.usfirst.frc.team2907.robot.commands.ExampleCommand;
+import org.usfirst.frc.team2907.robot.commands.ShiftCommand;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -12,6 +14,12 @@ import org.usfirst.frc.team2907.robot.commands.ExampleCommand;
  */
 public class OI {
 	public Joystick leftStick = new Joystick(0);
+	public JoystickButton shiftButton = new JoystickButton(leftStick, 1);
+	
+	public OI()
+	{
+		shiftButton.whileHeld(new ClimberCommand(1));
+	}
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a
 	//// joystick.

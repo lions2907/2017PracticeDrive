@@ -8,5 +8,7 @@
 	<classpathentry kind="lib" path="C:/Users/LionRobotics/Downloads/CTRE_FRCLibs_NON-WINDOWS_v4.4.1.9/java/lib/CTRLib.jar"/>
 	<classpathentry kind="lib" path="C:/Users/LionRobotics/Downloads/navx-mxp-libs/roborio/java/lib/navx_frc.jar"/>
 	<classpathentry kind="var" path="JRE_LIB"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/navx_frc.jar"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/TalonSRXLibJava.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

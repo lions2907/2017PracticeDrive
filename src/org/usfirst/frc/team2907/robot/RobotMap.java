@@ -8,11 +8,14 @@ package org.usfirst.frc.team2907.robot;
  */
 public class RobotMap {
 	public static final int TALON_LEFT_1 = 1;
-	public static final int TALON_LEFT_2 = 0;  // todo
-	public static final int TALON_RIGHT_1 = 4;
-	public static final int TALON_RIGHT_2 = 2; // todo
-	public static final int TALON_CLIMB_1 = 3;
-	public static final int TALON_CLIMB_2 = 2;
+	public static final int TALON_LEFT_2 = 2;  // todo
+	public static final int TALON_RIGHT_1 = 0;
+	public static final int TALON_RIGHT_2 = 3; // todo
+	public static final int TALON_CLIMB_1 = 8;
+	public static final int TALON_CLIMB_2 = 6;
+	public static final int TALON_EXTRA = 4;
+	public static final int SOLENOID_1 = 0;
+	public static final int SOLENOID_2 = 1;
 	// For example to map the left and right motors, you could define the
 	// following variables to use with your drivetrain subsystem.
 	// public static int leftMotor = 1;
