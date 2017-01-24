@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc.team2907.robot.commands.ClimberCommand;
 import org.usfirst.frc.team2907.robot.commands.ExampleCommand;
+import org.usfirst.frc.team2907.robot.commands.RotateToAngle;
 import org.usfirst.frc.team2907.robot.commands.ShiftCommand;
 
 /**
@@ -15,10 +16,12 @@ import org.usfirst.frc.team2907.robot.commands.ShiftCommand;
 public class OI {
 	public Joystick leftStick = new Joystick(0);
 	public JoystickButton shiftButton = new JoystickButton(leftStick, 1);
+	public JoystickButton turnButton = new JoystickButton(leftStick, 2);
 	
 	public OI()
 	{
 		shiftButton.whileHeld(new ClimberCommand(1));
+		turnButton.whileHeld(new RotateToAngle((Robot.camera.getLastBlock() != null) ? Robot.camera.getLastBlock().centerX : Robot.driveTrain.sensorBoard.getAngle()));
 	}
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a

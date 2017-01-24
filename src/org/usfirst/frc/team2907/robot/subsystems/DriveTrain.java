@@ -26,12 +26,22 @@ public class DriveTrain extends Subsystem
 	private Solenoid highSolenoid = new Solenoid(RobotMap.SOLENOID_1);
 	private Solenoid lowSolenoid2 = new Solenoid(RobotMap.SOLENOID_2);
 	
-	private RobotDrive robotDrive;
+	public AHRS sensorBoard;
+	public RobotDrive robotDrive;
 	public boolean status = false;
 	
 	public DriveTrain()
 	{
 		robotDrive = new RobotDrive(left1, left2, right1, right2);
+		try
+		{
+			sensorBoard = new AHRS(SPI.Port.kMXP);
+		} catch (Exception e)
+		{
+			System.out.println("Error instantating sensorBoard : " + e.getMessage());
+		}
+		
+		sensorBoard.reset();
 	}
 	
 	public RobotDrive getRobotDrive()
