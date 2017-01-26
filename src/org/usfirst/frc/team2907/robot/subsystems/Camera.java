@@ -60,9 +60,22 @@ public class Camera extends Subsystem
 	public PixyBlock[] read()
 	{
 		PixyBlock[] pixyBlocks = new PixyBlock[MAX_BLOCKS];
-		int index = 0;
 		byte[] bytes = new byte[BLOCK_SIZE * MAX_BLOCKS];
 		port.read(0x54, MAX_BLOCKS * BLOCK_SIZE, bytes);
+		int index = 0;
+		for ( ; index < bytes.length - 1; ++index)
+		{
+			int b1 = bytes[byteOffset];
+			if (b1 < 0)
+				b1 += 256;
+
+			int b2 = bytes[byteOffset + 1];
+			if (b2 < 0)
+				b2 += 256;
+
+			if (b1 == 0x55 && b2 == 0xaa) 
+				break;
+		}
 //		for (int i = 0; i < bytes.length; ++i)
 //		{
 //			if ((int)bytes[i] != 0)
@@ -71,7 +84,7 @@ public class Camera extends Subsystem
 		// int result = port.read(true, bytes, BLOCK_SIZE * MAX_BLOCKS);
 		// System.out.println("bytes read : " + result);
 		// System.out.println("Bytes read : " + bytes);
-		for (int byteOffset = 0; byteOffset < bytes.length - BLOCK_SIZE - 1;)
+		for (int byteOffset = index; byteOffset < bytes.length - BLOCK_SIZE - 1;)
 		{
 			// checking for sync block
 			int b1 = bytes[byteOffset];
@@ -85,7 +98,6 @@ public class Camera extends Subsystem
 			// System.out.println("byte : " + b1); //bytes[byteOffset]);
 			if (b1 == 0x55 && b2 == 0xaa)
 			{
-				byteOffset += 2;
 				//System.out.println("\n" + bytes[byteOffset]);
 				// copy block into temp buffer
 				byte[] temp = new byte[BLOCK_SIZE];
@@ -96,7 +108,7 @@ public class Camera extends Subsystem
 					sb.append(temp[tempOffset] + ", ");
 					//System.out.println("read byte : " + temp[tempOffset]);
 				}
-				//System.out.println(sb.toString());
+				System.out.println(sb.toString());
 
 				PixyBlock block = bytesToBlock(temp);
 				if (block != null)
