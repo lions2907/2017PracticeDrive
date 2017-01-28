@@ -23,6 +23,8 @@ public class Camera extends Subsystem
 	private I2C port;
 	private boolean inRange;
 	private double offset;
+	
+	private ArrayList<PixyBlock> pixyBlocks = new ArrayList<>();
 
 	public Camera()
 	{
@@ -61,7 +63,8 @@ public class Camera extends Subsystem
 
 	public ArrayList<PixyBlock> read()
 	{
-		ArrayList<PixyBlock> pixyBlocks = new ArrayList<>();
+		pixyBlocks.clear();
+//		ArrayList<PixyBlock> pixyBlocks = new ArrayList<>();
 //		PixyBlock[] pixyBlocks = new PixyBlock[MAX_BLOCKS];
 //		int pixyIndex = 0;
 		byte[] bytes = new byte[64];
@@ -161,6 +164,9 @@ public class Camera extends Subsystem
 				double difference = (rightBlock.centerX + leftBlock.centerX) / 2;
 				System.out.println("Center X : " + difference);
 				Robot.camera.setLastOffset(difference);
+			} else 
+			{
+				setLastOffset(pixyBlocks.get(0).centerX);
 			}
 		} else 
 		{

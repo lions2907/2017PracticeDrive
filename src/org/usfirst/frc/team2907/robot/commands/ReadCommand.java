@@ -18,31 +18,32 @@ public class ReadCommand extends Command{
 	
 	protected void execute()
 	{
-		ArrayList<PixyBlock> blocks = Robot.camera.read();
+		Robot.camera.read();
+//		ArrayList<PixyBlock> blocks = Robot.camera.read();
 //		PixyBlock[] blocks = Robot.camera.read();
-		if (blocks != null && blocks.size() > 0)
-		{
-			if (blocks.size() >= 2)
-			{
-				PixyBlock leftBlock;
-				PixyBlock rightBlock;
-				if (blocks.get(0).centerX > blocks.get(1).centerX)
-				{
-					leftBlock = blocks.get(1);
-					rightBlock = blocks.get(0);
-				} else 
-				{
-					leftBlock = blocks.get(0);
-					rightBlock = blocks.get(1);
-				}
-				double difference = (rightBlock.centerX + leftBlock.centerX) / 2;
-				System.out.println("Center X : " + difference);
-				Robot.camera.setLastOffset(difference);
-			}
-		} else 
-		{
-			Robot.camera.setInRange(false);
-		}
+//		if (blocks != null && blocks.size() > 0)
+//		{
+//			if (blocks.size() >= 2)
+//			{
+//				PixyBlock leftBlock;
+//				PixyBlock rightBlock;
+//				if (blocks.get(0).centerX > blocks.get(1).centerX)
+//				{
+//					leftBlock = blocks.get(1);
+//					rightBlock = blocks.get(0);
+//				} else 
+//				{
+//					leftBlock = blocks.get(0);
+//					rightBlock = blocks.get(1);
+//				}
+//				double difference = (rightBlock.centerX + leftBlock.centerX) / 2;
+//				System.out.println("Center X : " + difference);
+//				Robot.camera.setLastOffset(difference);
+//			}
+//		} else 
+//		{
+//			Robot.camera.setInRange(false);
+//		}
 	}
 	
 	@Override

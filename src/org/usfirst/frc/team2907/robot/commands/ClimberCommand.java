@@ -20,13 +20,8 @@ public class ClimberCommand extends Command{
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	Robot.climber.talon1.set(-power);
-    	Robot.climber.talon1.set(-power);
-//    	if (!Robot.oi.shiftButton.get())
-//    	{
-//        	Robot.climber.talon1.set(0);
-//        	Robot.climber.talon2.set(0);
-//        	end();
-//    	}
+    	Robot.climber.talon2.set(-power);
+    	System.out.println("Encoder pulses : " + Robot.climber.climbEncoder.getDistance());
     }
 
     // Make this return true when this Command no longer needs to run execute()
