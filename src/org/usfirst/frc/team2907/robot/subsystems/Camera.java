@@ -1,5 +1,8 @@
 package org.usfirst.frc.team2907.robot.subsystems;
 
+import java.util.ArrayList;
+
+import org.usfirst.frc.team2907.robot.Robot;
 import org.usfirst.frc.team2907.robot.RobotMap;
 import org.usfirst.frc.team2907.robot.commands.ReadCommand;
 
@@ -18,8 +21,8 @@ public class Camera extends Subsystem
 	public static final int BLOCK_SIZE = 14;
 	// private SPI port;
 	private I2C port;
-	private PixyBlock lastBlock;
 	private boolean inRange;
+	private double offset;
 
 	public Camera()
 	{
@@ -39,17 +42,16 @@ public class Camera extends Subsystem
 	{
 		setDefaultCommand(new ReadCommand());
 	}
-
-	public PixyBlock getLastBlock()
+	
+	public void setLastOffset(double offset)
 	{
-		return lastBlock;
+		this.offset = offset;
+		setInRange(true);
 	}
-
-	public void setLastBlock(PixyBlock block)
+	
+	public double getLastOffset()
 	{
-		lastBlock = block;
-		if (block != null)
-			inRange = true;
+		return offset;
 	}
 
 	public void setInRange(boolean inRange)
@@ -57,21 +59,47 @@ public class Camera extends Subsystem
 		this.inRange = inRange;
 	}
 
-	public PixyBlock[] read()
+	public ArrayList<PixyBlock> read()
 	{
-		PixyBlock[] pixyBlocks = new PixyBlock[MAX_BLOCKS];
-		int index = 0;
-		byte[] bytes = new byte[BLOCK_SIZE * MAX_BLOCKS];
-		port.read(0x54, MAX_BLOCKS * BLOCK_SIZE, bytes);
+		ArrayList<PixyBlock> pixyBlocks = new ArrayList<>();
+//		PixyBlock[] pixyBlocks = new PixyBlock[MAX_BLOCKS];
+//		int pixyIndex = 0;
+		byte[] bytes = new byte[64];
+		port.read(0x54, 64, bytes);
 		// for (int i = 0; i < bytes.length; ++i)
 		// {
 		// if ((int)bytes[i] != 0)
 		// System.out.println("Byte : " + bytes[i]);
 		// }
+		int index = 0;
+		for ( ; index < bytes.length - 1; ++index)
+		{
+			int b1 = bytes[index];
+			if (b1 < 0)
+				b1 += 256;
+
+			int b2 = bytes[index + 1];
+			if (b2 < 0)
+				b2 += 256;
+
+			if (b1 == 0x55 && b2 == 0xaa) 
+				break;
+		}
+		
+		if (index == 63)
+			return null;
+		else if (index == 0) 
+			index += 2;
+//		for (int i = 0; i < bytes.length; ++i)
+//		{
+//			if ((int)bytes[i] != 0)
+//				System.out.println("Byte : " + bytes[i]);
+//		}
 		// int result = port.read(true, bytes, BLOCK_SIZE * MAX_BLOCKS);
 		// System.out.println("bytes read : " + result);
 		// System.out.println("Bytes read : " + bytes);
-		for (int byteOffset = 0; byteOffset < bytes.length - BLOCK_SIZE - 1;)
+		System.out.println("-----------------");
+		for (int byteOffset = index; byteOffset < bytes.length - BLOCK_SIZE - 1;)
 		{
 			// checking for sync block
 			int b1 = bytes[byteOffset];
@@ -85,8 +113,8 @@ public class Camera extends Subsystem
 			// System.out.println("byte : " + b1); //bytes[byteOffset]);
 			if (b1 == 0x55 && b2 == 0xaa)
 			{
-				byteOffset += 2;
 				// System.out.println("\n" + bytes[byteOffset]);
+				//System.out.println("\n" + bytes[byteOffset]);
 				// copy block into temp buffer
 				byte[] temp = new byte[BLOCK_SIZE];
 				StringBuilder sb = new StringBuilder("Data : ");
@@ -97,11 +125,13 @@ public class Camera extends Subsystem
 					// System.out.println("read byte : " + temp[tempOffset]);
 				}
 				// System.out.println(sb.toString());
+				//System.out.println(sb.toString());
 
 				PixyBlock block = bytesToBlock(temp);
 				if (block != null)
 				{
-					pixyBlocks[index++] = block;
+					pixyBlocks.add(block);
+//					pixyBlocks[pixyIndex++] = block;
 					System.out.println("Block width : " + block.width + ", block height : " + block.height);
 					System.out.println("Block x : " + block.centerX + ", block y : " + block.centerY);
 					System.out.println("Sig : " + block.signature);
@@ -111,6 +141,30 @@ public class Camera extends Subsystem
 					++byteOffset;
 			} else
 				++byteOffset;
+		}
+		
+		if (pixyBlocks != null && pixyBlocks.size() > 0)
+		{
+			if (pixyBlocks.size() >= 2)
+			{
+				PixyBlock leftBlock;
+				PixyBlock rightBlock;
+				if (pixyBlocks.get(0).centerX > pixyBlocks.get(1).centerX)
+				{
+					leftBlock = pixyBlocks.get(1);
+					rightBlock = pixyBlocks.get(0);
+				} else 
+				{
+					leftBlock = pixyBlocks.get(0);
+					rightBlock = pixyBlocks.get(1);
+				}
+				double difference = (rightBlock.centerX + leftBlock.centerX) / 2;
+				System.out.println("Center X : " + difference);
+				Robot.camera.setLastOffset(difference);
+			}
+		} else 
+		{
+			setInRange(false);
 		}
 		return pixyBlocks;
 	}
