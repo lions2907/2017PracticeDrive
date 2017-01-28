@@ -39,19 +39,19 @@ public class Camera extends Subsystem
 	{
 		setDefaultCommand(new ReadCommand());
 	}
-	
+
 	public PixyBlock getLastBlock()
 	{
 		return lastBlock;
 	}
-	
+
 	public void setLastBlock(PixyBlock block)
 	{
 		lastBlock = block;
 		if (block != null)
 			inRange = true;
 	}
-	
+
 	public void setInRange(boolean inRange)
 	{
 		this.inRange = inRange;
@@ -63,11 +63,11 @@ public class Camera extends Subsystem
 		int index = 0;
 		byte[] bytes = new byte[BLOCK_SIZE * MAX_BLOCKS];
 		port.read(0x54, MAX_BLOCKS * BLOCK_SIZE, bytes);
-//		for (int i = 0; i < bytes.length; ++i)
-//		{
-//			if ((int)bytes[i] != 0)
-//				System.out.println("Byte : " + bytes[i]);
-//		}
+		// for (int i = 0; i < bytes.length; ++i)
+		// {
+		// if ((int)bytes[i] != 0)
+		// System.out.println("Byte : " + bytes[i]);
+		// }
 		// int result = port.read(true, bytes, BLOCK_SIZE * MAX_BLOCKS);
 		// System.out.println("bytes read : " + result);
 		// System.out.println("Bytes read : " + bytes);
@@ -86,7 +86,7 @@ public class Camera extends Subsystem
 			if (b1 == 0x55 && b2 == 0xaa)
 			{
 				byteOffset += 2;
-				//System.out.println("\n" + bytes[byteOffset]);
+				// System.out.println("\n" + bytes[byteOffset]);
 				// copy block into temp buffer
 				byte[] temp = new byte[BLOCK_SIZE];
 				StringBuilder sb = new StringBuilder("Data : ");
@@ -94,19 +94,18 @@ public class Camera extends Subsystem
 				{
 					temp[tempOffset] = bytes[byteOffset + tempOffset];
 					sb.append(temp[tempOffset] + ", ");
-					//System.out.println("read byte : " + temp[tempOffset]);
+					// System.out.println("read byte : " + temp[tempOffset]);
 				}
-				//System.out.println(sb.toString());
+				// System.out.println(sb.toString());
 
 				PixyBlock block = bytesToBlock(temp);
 				if (block != null)
 				{
 					pixyBlocks[index++] = block;
-					 System.out.println("Block width : " + block.width +
-					 ", block height : " + block.height);
-					 System.out.println("Block x : " + block.centerX +
-					 ", block y : " + block.centerY);
-					 System.out.println("Sig : " + block.signature);
+					System.out.println("Block width : " + block.width + ", block height : " + block.height);
+					System.out.println("Block x : " + block.centerX + ", block y : " + block.centerY);
+					System.out.println("Sig : " + block.signature);
+					System.out.println("checksum : " + block.checksum);
 					byteOffset += BLOCK_SIZE - 1;
 				} else
 					++byteOffset;
@@ -133,14 +132,14 @@ public class Camera extends Subsystem
 		// pixyBlock.width = bytesToInt(bytes[11], bytes[10]);
 		// pixyBlock.height = bytesToInt(bytes[13], bytes[12]);
 
-//		System.out.println("centerx byte b1 : " + bytes[7] + ", b2 : "
-//				+ bytes[6]);
+		// System.out.println("centerx byte b1 : " + bytes[7] + ", b2 : "
+		// + bytes[6]);
 
 		pixyBlock.signature = orBytes(bytes[5], bytes[4]);
-		pixyBlock.centerX = ((((int)bytes[7] & 0xff) << 8) | ((int)bytes[6] & 0xff));
-		pixyBlock.centerY = ((((int)bytes[9] & 0xff) << 8) | ((int)bytes[8] & 0xff));
-		pixyBlock.width = ((((int)bytes[11] & 0xff) << 8) | ((int)bytes[10] & 0xff));
-		pixyBlock.height = ((((int)bytes[13] & 0xff) << 8) | ((int)bytes[12] & 0xff));
+		pixyBlock.centerX = ((((int) bytes[7] & 0xff) << 8) | ((int) bytes[6] & 0xff));
+		pixyBlock.centerY = ((((int) bytes[9] & 0xff) << 8) | ((int) bytes[8] & 0xff));
+		pixyBlock.width = ((((int) bytes[11] & 0xff) << 8) | ((int) bytes[10] & 0xff));
+		pixyBlock.height = ((((int) bytes[13] & 0xff) << 8) | ((int) bytes[12] & 0xff));
 		return pixyBlock;
 	}
 
@@ -175,7 +174,7 @@ public class Camera extends Subsystem
 		// read byte : 85 read byte : -86
 		// read byte : 85 read byte : -86
 		// read byte : 22 read byte : 1
-		// read by 
+		// read by
 		// read byte : -128 read byte : 0
 		// read byte : 118 read byte : 0
 		// read byte : 22 read byte : 0
