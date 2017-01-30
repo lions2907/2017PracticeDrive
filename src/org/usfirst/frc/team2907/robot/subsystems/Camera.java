@@ -67,7 +67,7 @@ public class Camera extends Subsystem
 		double distance = (1.166 * 320) / (2 * width * Math.tan(75 / 2));
 		System.out.println("Width : " + width + " distance : " + distance);
 		double angleToTarget = (160 - targetCenter) * DEGREES_PER_PIXEL;
-		double sideDistance = Math.tan(angleToTarget / distance);
+		double sideDistance = distance * Math.sin(angleToTarget);
 		System.out.println("Angle : " + angleToTarget + " sideDistance : " + sideDistance);
 		return distance;
 	}
@@ -75,7 +75,8 @@ public class Camera extends Subsystem
 	public ArrayList<PixyBlock> read()
 	{
 		pixyBlocks.clear();
-//		ArrayList<PixyBlock> pixyBlocks = new ArrayList<>();
+//		ArrayList<PixyBlock> 
+		pixyBlocks = new ArrayList<>();
 //		PixyBlock[] pixyBlocks = new PixyBlock[MAX_BLOCKS];
 //		int pixyIndex = 0;
 		byte[] bytes = new byte[64];

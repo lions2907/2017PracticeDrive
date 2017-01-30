@@ -25,7 +25,7 @@ public class OI {
 	{
 		armSpinner.whileHeld(new ClimberCommand(.2));
 		armSpinnerBack.whileHeld(new ClimberCommand(-.2));
-		alignButton.whileHeld(new DriveTillColisionCommand());
+		alignButton.whenPressed(new AlignPixyCommand());
 	}
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a
