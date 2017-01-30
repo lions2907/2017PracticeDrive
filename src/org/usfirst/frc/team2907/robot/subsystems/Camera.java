@@ -19,6 +19,7 @@ public class Camera extends Subsystem
 {
 	public static final int MAX_BLOCKS = 20;
 	public static final int BLOCK_SIZE = 14;
+	private static final double DEGREES_PER_PIXEL = 75.0 / 320.0;
 	// private SPI port;
 	private I2C port;
 	private boolean inRange;
@@ -61,10 +62,13 @@ public class Camera extends Subsystem
 		this.inRange = inRange;
 	}
 	
-	public double getDistance(double width)
+	public double getDistance(double width, double targetCenter)
 	{
 		double distance = (1.166 * 320) / (2 * width * Math.tan(75 / 2));
 		System.out.println("Width : " + width + " distance : " + distance);
+		double angleToTarget = (160 - targetCenter) * DEGREES_PER_PIXEL;
+		double sideDistance = Math.tan(angleToTarget / distance);
+		System.out.println("Angle : " + angleToTarget + " sideDistance : " + sideDistance);
 		return distance;
 	}
 
@@ -171,8 +175,8 @@ public class Camera extends Subsystem
 				double difference = (rightBlock.centerX + leftBlock.centerX) / 2;
 				System.out.println("Center X : " + difference);
 				Robot.camera.setLastOffset(difference);
-				double total = (rightBlock.centerX + rightBlock.width / 2) - (leftBlock.centerX - leftBlock.width / 2);
-				getDistance(total);
+				double total = (rightBlock.centerX) - (leftBlock.centerX);
+				getDistance(total, difference);
 			} else 
 			{
 				setLastOffset(pixyBlocks.get(0).centerX);
