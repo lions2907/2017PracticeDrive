@@ -60,6 +60,13 @@ public class Camera extends Subsystem
 	{
 		this.inRange = inRange;
 	}
+	
+	public double getDistance(double width)
+	{
+		double distance = (1.166 * 320) / (2 * width * Math.tan(75 / 2));
+		System.out.println("Width : " + width + " distance : " + distance);
+		return distance;
+	}
 
 	public ArrayList<PixyBlock> read()
 	{
@@ -164,6 +171,8 @@ public class Camera extends Subsystem
 				double difference = (rightBlock.centerX + leftBlock.centerX) / 2;
 				System.out.println("Center X : " + difference);
 				Robot.camera.setLastOffset(difference);
+				double total = (rightBlock.centerX + rightBlock.width / 2) - (leftBlock.centerX - leftBlock.width / 2);
+				getDistance(total);
 			} else 
 			{
 				setLastOffset(pixyBlocks.get(0).centerX);
