@@ -17,9 +17,12 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Camera extends Subsystem
 {
-	public static final int MAX_BLOCKS = 20;
+	public static final double PIXY_FOV = 75.0;
+	public static final double IMAGE_WIDTH = 320.0;
+	public static final double GEAR_WIDTH_FT = 1.166;
 	public static final int BLOCK_SIZE = 14;
 	private static final double DEGREES_PER_PIXEL = 75.0 / 320.0;
+	public static int PIXY_ADDRESS = 0x54;
 	// private SPI port;
 	private I2C port;
 	private boolean inRange;
@@ -31,14 +34,11 @@ public class Camera extends Subsystem
 	{
 		try
 		{
-			port = new I2C(I2C.Port.kOnboard, 0x54);
-			// port = new SPI(SPI.Port.kOnboardCS0);
-			// port.setSampleDataOnFalling();
+			port = new I2C(I2C.Port.kOnboard, PIXY_ADDRESS);
 		} catch (Exception e)
 		{
 			System.out.println("e : " + e.getLocalizedMessage());
 		}
-		// read();
 	}
 
 	public void initDefaultCommand()
@@ -64,9 +64,9 @@ public class Camera extends Subsystem
 	
 	public double getDistance(double width, double targetCenter)
 	{
-		double distance = (1.166 * 320) / (2 * width * Math.tan(75 / 2));
+		double distance = (GEAR_WIDTH_FT * IMAGE_WIDTH) / (2 * width * Math.tan(PIXY_FOV / 2));
 		System.out.println("Width : " + width + " distance : " + distance);
-		double angleToTarget = (160 - targetCenter) * DEGREES_PER_PIXEL;
+		double angleToTarget = (IMAGE_WIDTH / 2 - targetCenter) * DEGREES_PER_PIXEL;
 		double sideDistance = distance * Math.sin(angleToTarget);
 		System.out.println("Angle : " + angleToTarget + " sideDistance : " + sideDistance);
 		return distance;
