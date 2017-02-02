@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Climber extends Subsystem {
 	public CANTalon talon1 = new CANTalon(RobotMap.TALON_CLIMB_1);
 	public CANTalon talon2 = new CANTalon(RobotMap.TALON_CLIMB_2);
-	public Encoder climbEncoder = new Encoder(0, 1, false, EncodingType.k1X);
+	public Encoder climbEncoder = new Encoder(2, 3, false, EncodingType.k1X);
 	
 	public Climber()
 	{

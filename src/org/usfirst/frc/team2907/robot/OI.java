@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 import org.usfirst.frc.team2907.robot.commands.AlignPixyCommand;
+import org.usfirst.frc.team2907.robot.commands.CameraYTiltCommand;
 import org.usfirst.frc.team2907.robot.commands.ClimberCommand;
 import org.usfirst.frc.team2907.robot.commands.DriveTillColisionCommand;
-import org.usfirst.frc.team2907.robot.commands.EncoderTestCommand;
 import org.usfirst.frc.team2907.robot.commands.RotateToAngle;
 import org.usfirst.frc.team2907.robot.commands.ShiftCommand;
 
@@ -20,12 +20,18 @@ public class OI {
 	public JoystickButton armSpinner = new JoystickButton(leftStick, 1);
 	public JoystickButton armSpinnerBack = new JoystickButton(leftStick, 2);
 	public JoystickButton alignButton = new JoystickButton(leftStick, 3);
+	public JoystickButton shiftUpButton = new JoystickButton(leftStick, 4);
+	public JoystickButton camTiltUp = new JoystickButton(leftStick, 7);
+	public JoystickButton camTiltDown = new JoystickButton(leftStick, 8);
 	
 	public OI()
 	{
 		armSpinner.whileHeld(new ClimberCommand(.2));
 		armSpinnerBack.whileHeld(new ClimberCommand(-.2));
-		alignButton.whenPressed(new AlignPixyCommand());
+		//alignButton.whenPressed(new AlignPixyCommand());
+		shiftUpButton.whenPressed(new ShiftCommand());
+		camTiltUp.whenPressed( new CameraYTiltCommand(0));
+		camTiltDown.whenPressed( new CameraYTiltCommand(75));
 	}
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a

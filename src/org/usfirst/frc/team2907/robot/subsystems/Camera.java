@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.SerialPort.Port;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -17,7 +18,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Camera extends Subsystem
 {
-	public static final double PIXY_FOV = 75.0;
+	public static final double PIXY_FOV = 25; // 75 prev
 	public static final double IMAGE_WIDTH = 320.0;
 	public static final double GEAR_WIDTH_FT = 1.166;
 	public static final int BLOCK_SIZE = 14;
@@ -27,6 +28,8 @@ public class Camera extends Subsystem
 	private I2C port;
 	private boolean inRange;
 	private double offset;
+	
+	public Servo camYTilt = new Servo(RobotMap.CAM_Y_TILT_SERVO);
 	
 	private ArrayList<PixyBlock> pixyBlocks = new ArrayList<>();
 
