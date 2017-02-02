@@ -31,7 +31,7 @@ public class OI {
 		//alignButton.whenPressed(new AlignPixyCommand());
 		shiftUpButton.whenPressed(new ShiftCommand());
 		camTiltUp.whenPressed( new CameraYTiltCommand(0));
-		camTiltDown.whenPressed( new CameraYTiltCommand(75));
+		camTiltDown.whenPressed( new CameraYTiltCommand(50));
 	}
 	//// CREATING BUTTONS
 	// One type of button is a joystick button which is any button on a
