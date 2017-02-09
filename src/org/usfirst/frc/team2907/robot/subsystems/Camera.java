@@ -18,11 +18,11 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 public class Camera extends Subsystem
 {
-	public static final double PIXY_FOV = 25; // 75 prev
+	public static final double PIXY_FOV = 42; // 75 prev
 	public static final double IMAGE_WIDTH = 320.0;
 	public static final double GEAR_WIDTH_FT = 1.166;
 	public static final int BLOCK_SIZE = 14;
-	private static final double DEGREES_PER_PIXEL = 75.0 / 320.0;
+	private static final double DEGREES_PER_PIXEL = PIXY_FOV / IMAGE_WIDTH;
 	public static int PIXY_ADDRESS = 0x54;
 	// private SPI port;
 	private I2C port;
@@ -178,7 +178,7 @@ public class Camera extends Subsystem
 				}
 				double difference = (rightBlock.centerX + leftBlock.centerX) / 2;
 				System.out.println("Center X : " + difference);
-				Robot.camera.setLastOffset(difference);
+				setLastOffset(difference);
 				double total = (rightBlock.centerX) - (leftBlock.centerX);
 				getDistance(total, difference);
 			} else 

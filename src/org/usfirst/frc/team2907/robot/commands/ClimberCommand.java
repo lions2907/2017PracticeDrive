@@ -21,7 +21,7 @@ public class ClimberCommand extends Command{
     protected void execute() {
     	Robot.climber.talon1.set(-power);
     	Robot.climber.talon2.set(-power);
-    	System.out.println("Encoder pulses : " + Robot.climber.climbEncoder.getDistance());
+    	//System.out.println("Encoder pulses : " + Robot.climber.climbEncoder.getDistance());
     }
 
     // Make this return true when this Command no longer needs to run execute()
