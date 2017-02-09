@@ -17,8 +17,18 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class Camera extends Subsystem
-{
-	public static final double PIXY_FOV = 42; // 75 prev
+{	
+	enum distances {
+		TWO(2, 113), THREE(3, 82), FOUR(4, 62), FIVE(5, 49), SIX(6, 31), SEVEN(7, 35);
+		int d;
+		int s;
+		private distances(int d, int s)
+		{
+			this.d = d;
+			this.s = d;
+		}
+	}
+	public static final double PIXY_FOV = 75; // 42 prev
 	public static final double IMAGE_WIDTH = 320.0;
 	public static final double GEAR_WIDTH_FT = 1.166;
 	public static final int BLOCK_SIZE = 14;
@@ -67,11 +77,19 @@ public class Camera extends Subsystem
 	
 	public double getDistance(double width, double targetCenter)
 	{
-		double distance = (GEAR_WIDTH_FT * IMAGE_WIDTH) / (2 * width * Math.tan(PIXY_FOV / 2));
+		
+		double distance = Math.pow(277.71 * width, -1.037);
 		System.out.println("Width : " + width + " distance : " + distance);
-		double angleToTarget = (IMAGE_WIDTH / 2 - targetCenter) * DEGREES_PER_PIXEL;
-		double sideDistance = distance * Math.sin(angleToTarget);
-		System.out.println("Angle : " + angleToTarget + " sideDistance : " + sideDistance);
+//		double angleToTarget = (IMAGE_WIDTH / 2 - targetCenter) * DEGREES_PER_PIXEL;
+//		double sideDistance = distance * Math.sin(angleToTarget);
+//		System.out.println("Angle : " + angleToTarget + " sideDistance : " + sideDistance);
+		
+		
+//		double distance = (GEAR_WIDTH_FT * IMAGE_WIDTH) / (2 * width * Math.tan(PIXY_FOV / 2));
+//		System.out.println("Width : " + width + " distance : " + distance);
+//		double angleToTarget = (IMAGE_WIDTH / 2 - targetCenter) * DEGREES_PER_PIXEL;
+//		double sideDistance = distance * Math.sin(angleToTarget);
+//		System.out.println("Angle : " + angleToTarget + " sideDistance : " + sideDistance);
 		return distance;
 	}
 
