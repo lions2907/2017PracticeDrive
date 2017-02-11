@@ -17,17 +17,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  *
  */
 public class Camera extends Subsystem
-{	
-	enum distances {
-		TWO(2, 113), THREE(3, 82), FOUR(4, 62), FIVE(5, 49), SIX(6, 31), SEVEN(7, 35);
-		int d;
-		int s;
-		private distances(int d, int s)
-		{
-			this.d = d;
-			this.s = d;
-		}
-	}
+{
+	private static final int[] distances = { 0, 113, 81, 62, 49, 41, 35, 30,
+			28, 25, 22, 21 };
 	public static final double PIXY_FOV = 75; // 42 prev
 	public static final double IMAGE_WIDTH = 320.0;
 	public static final double GEAR_WIDTH_FT = 1.166;
@@ -38,9 +30,9 @@ public class Camera extends Subsystem
 	private I2C port;
 	private boolean inRange;
 	private double offset;
-	
+
 	public Servo camYTilt = new Servo(RobotMap.CAM_Y_TILT_SERVO);
-	
+
 	private ArrayList<PixyBlock> pixyBlocks = new ArrayList<>();
 
 	public Camera()
@@ -58,13 +50,13 @@ public class Camera extends Subsystem
 	{
 		setDefaultCommand(new ReadCommand());
 	}
-	
+
 	public void setLastOffset(double offset)
 	{
 		this.offset = offset;
 		setInRange(true);
 	}
-	
+
 	public double getLastOffset()
 	{
 		return offset;
@@ -74,32 +66,45 @@ public class Camera extends Subsystem
 	{
 		this.inRange = inRange;
 	}
-	
+
 	public double getDistance(double width, double targetCenter)
 	{
-		
-		double distance = Math.pow(277.71 * width, -1.037);
-		System.out.println("Width : " + width + " distance : " + distance);
-//		double angleToTarget = (IMAGE_WIDTH / 2 - targetCenter) * DEGREES_PER_PIXEL;
-//		double sideDistance = distance * Math.sin(angleToTarget);
-//		System.out.println("Angle : " + angleToTarget + " sideDistance : " + sideDistance);
-		
-		
-//		double distance = (GEAR_WIDTH_FT * IMAGE_WIDTH) / (2 * width * Math.tan(PIXY_FOV / 2));
-//		System.out.println("Width : " + width + " distance : " + distance);
-//		double angleToTarget = (IMAGE_WIDTH / 2 - targetCenter) * DEGREES_PER_PIXEL;
-//		double sideDistance = distance * Math.sin(angleToTarget);
-//		System.out.println("Angle : " + angleToTarget + " sideDistance : " + sideDistance);
-		return distance;
+		int index = 0;
+		int smallest = 1000;
+		for (int i = 0; i < distances.length; i++)
+		{
+			if (Math.abs(width - distances[i]) < smallest)
+			{
+				index = i;
+				smallest = Math.abs((int) (width - distances[i]));
+			}
+		}
+		double distance = index;
+		System.out.println("Width : " + width + " distance : " + index);
+		// double angleToTarget = (IMAGE_WIDTH / 2 - targetCenter) *
+		// DEGREES_PER_PIXEL;
+		// double sideDistance = distance * Math.sin(angleToTarget);
+		// System.out.println("Angle : " + angleToTarget + " sideDistance : " +
+		// sideDistance);
+
+		// double distance = (GEAR_WIDTH_FT * IMAGE_WIDTH) / (2 * width *
+		// Math.tan(PIXY_FOV / 2));
+		// System.out.println("Width : " + width + " distance : " + distance);
+		// double angleToTarget = (IMAGE_WIDTH / 2 - targetCenter) *
+		// DEGREES_PER_PIXEL;
+		// double sideDistance = distance * Math.sin(angleToTarget);
+		// System.out.println("Angle : " + angleToTarget + " sideDistance : " +
+		// sideDistance);
+		return index;
 	}
 
 	public ArrayList<PixyBlock> read()
 	{
 		pixyBlocks.clear();
-//		ArrayList<PixyBlock> 
+		// ArrayList<PixyBlock>
 		pixyBlocks = new ArrayList<>();
-//		PixyBlock[] pixyBlocks = new PixyBlock[MAX_BLOCKS];
-//		int pixyIndex = 0;
+		// PixyBlock[] pixyBlocks = new PixyBlock[MAX_BLOCKS];
+		// int pixyIndex = 0;
 		byte[] bytes = new byte[64];
 		port.read(0x54, 64, bytes);
 		// for (int i = 0; i < bytes.length; ++i)
@@ -108,7 +113,7 @@ public class Camera extends Subsystem
 		// System.out.println("Byte : " + bytes[i]);
 		// }
 		int index = 0;
-		for ( ; index < bytes.length - 1; ++index)
+		for (; index < bytes.length - 1; ++index)
 		{
 			int b1 = bytes[index];
 			if (b1 < 0)
@@ -118,19 +123,19 @@ public class Camera extends Subsystem
 			if (b2 < 0)
 				b2 += 256;
 
-			if (b1 == 0x55 && b2 == 0xaa) 
+			if (b1 == 0x55 && b2 == 0xaa)
 				break;
 		}
-		
+
 		if (index == 63)
 			return null;
-		else if (index == 0) 
+		else if (index == 0)
 			index += 2;
-//		for (int i = 0; i < bytes.length; ++i)
-//		{
-//			if ((int)bytes[i] != 0)
-//				System.out.println("Byte : " + bytes[i]);
-//		}
+		// for (int i = 0; i < bytes.length; ++i)
+		// {
+		// if ((int)bytes[i] != 0)
+		// System.out.println("Byte : " + bytes[i]);
+		// }
 		// int result = port.read(true, bytes, BLOCK_SIZE * MAX_BLOCKS);
 		// System.out.println("bytes read : " + result);
 		// System.out.println("Bytes read : " + bytes);
@@ -150,7 +155,7 @@ public class Camera extends Subsystem
 			if (b1 == 0x55 && b2 == 0xaa)
 			{
 				// System.out.println("\n" + bytes[byteOffset]);
-				//System.out.println("\n" + bytes[byteOffset]);
+				// System.out.println("\n" + bytes[byteOffset]);
 				// copy block into temp buffer
 				byte[] temp = new byte[BLOCK_SIZE];
 				StringBuilder sb = new StringBuilder("Data : ");
@@ -161,15 +166,17 @@ public class Camera extends Subsystem
 					// System.out.println("read byte : " + temp[tempOffset]);
 				}
 				// System.out.println(sb.toString());
-				//System.out.println(sb.toString());
+				// System.out.println(sb.toString());
 
 				PixyBlock block = bytesToBlock(temp);
 				if (block != null)
 				{
 					pixyBlocks.add(block);
-//					pixyBlocks[pixyIndex++] = block;
-					System.out.println("Block width : " + block.width + ", block height : " + block.height);
-					System.out.println("Block x : " + block.centerX + ", block y : " + block.centerY);
+					// pixyBlocks[pixyIndex++] = block;
+					System.out.println("Block width : " + block.width
+							+ ", block height : " + block.height);
+					System.out.println("Block x : " + block.centerX
+							+ ", block y : " + block.centerY);
 					System.out.println("Sig : " + block.signature);
 					System.out.println("checksum : " + block.checksum);
 					byteOffset += BLOCK_SIZE - 1;
@@ -178,7 +185,7 @@ public class Camera extends Subsystem
 			} else
 				++byteOffset;
 		}
-		
+
 		if (pixyBlocks != null && pixyBlocks.size() > 0)
 		{
 			if (pixyBlocks.size() >= 2)
@@ -189,7 +196,7 @@ public class Camera extends Subsystem
 				{
 					leftBlock = pixyBlocks.get(1);
 					rightBlock = pixyBlocks.get(0);
-				} else 
+				} else
 				{
 					leftBlock = pixyBlocks.get(0);
 					rightBlock = pixyBlocks.get(1);
@@ -199,11 +206,11 @@ public class Camera extends Subsystem
 				setLastOffset(difference);
 				double total = (rightBlock.centerX) - (leftBlock.centerX);
 				getDistance(total, difference);
-			} else 
+			} else
 			{
 				setLastOffset(pixyBlocks.get(0).centerX);
 			}
-		} else 
+		} else
 		{
 			setInRange(false);
 		}
