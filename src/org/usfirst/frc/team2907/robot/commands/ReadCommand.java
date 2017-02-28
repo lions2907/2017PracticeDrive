@@ -3,7 +3,6 @@ package org.usfirst.frc.team2907.robot.commands;
 import java.util.ArrayList;
 
 import org.usfirst.frc.team2907.robot.Robot;
-import org.usfirst.frc.team2907.robot.subsystems.Camera.PixyBlock;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -13,12 +12,12 @@ public class ReadCommand extends Command{
 	public ReadCommand()
 	{
 		super("ReadCommand");
-		requires(Robot.camera);
+		requires(Robot.cameraManager);
 	}
 	
 	protected void execute()
 	{
-		Robot.camera.read();
+		Robot.cameraManager.readCameras();
 //		ArrayList<PixyBlock> blocks = Robot.camera.read();
 //		PixyBlock[] blocks = Robot.camera.read();
 //		if (blocks != null && blocks.size() > 0)

@@ -7,10 +7,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import org.usfirst.frc.team2907.robot.commands.AlignPixyAuto;
-import org.usfirst.frc.team2907.robot.commands.DriveStraightAuto;
-import org.usfirst.frc.team2907.robot.subsystems.Camera;
-import org.usfirst.frc.team2907.robot.subsystems.Climber;
+import org.usfirst.frc.team2907.robot.subsystems.CameraManager;
 import org.usfirst.frc.team2907.robot.subsystems.DriveTrain;
 
 /**
@@ -24,8 +21,7 @@ public class Robot extends IterativeRobot
 {
 	/* SUBSYSTEMS */
 	public static final DriveTrain driveTrain = new DriveTrain();
-	public static final Climber climber = new Climber();
-	public static final Camera camera = new Camera();
+	public static final CameraManager cameraManager = new CameraManager();
 	/* INPUT */
 	public static OI oi;
 
@@ -40,10 +36,6 @@ public class Robot extends IterativeRobot
 	public void robotInit() 
 	{
 		oi = new OI();
-//		chooser.addDefault("Default Auto", new ExampleCommand());
-		// chooser.addObject("My Auto", new MyAutoCommand());
-		chooser.addObject("DriveStraightAuto", new DriveStraightAuto());
-		chooser.addObject("AlignPixy", new AlignPixyAuto());
 		SmartDashboard.putData("Auto mode", chooser);
 	}
 
