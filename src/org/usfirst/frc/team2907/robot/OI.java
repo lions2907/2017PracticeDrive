@@ -1,6 +1,7 @@
 package org.usfirst.frc.team2907.robot;
 
 import org.usfirst.frc.team2907.robot.commands.ShiftCommand;
+import org.usfirst.frc.team2907.robot.commands.ShootCommand;
 import org.usfirst.frc.team2907.robot.commands.TurnServoCommand;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -13,9 +14,11 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 public class OI {
 	public Joystick driveStick = new Joystick(0);
 	public JoystickButton shiftButton = new JoystickButton(driveStick, 1);
+	public JoystickButton shootButton = new JoystickButton(driveStick, 2);
 	
 	public OI()
 	{
+		shootButton.whileHeld(new ShootCommand());
 		shiftButton.whenPressed(new ShiftCommand());
 	}
 }
