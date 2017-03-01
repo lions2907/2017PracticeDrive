@@ -16,6 +16,6 @@ public class OI {
 	
 	public OI()
 	{
-		shiftButton.whenPressed(new TurnServoCommand());
+		shiftButton.whenPressed(new ShiftCommand());
 	}
 }

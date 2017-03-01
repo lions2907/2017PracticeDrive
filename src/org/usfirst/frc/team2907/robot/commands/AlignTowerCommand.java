@@ -14,7 +14,7 @@ public class AlignTowerCommand extends Command
 {
 	// constants for easy changes
 	public static final int HORIZONTAL_OFFSET = 180;
-	public static final int VERTICAL_OFFSET = 100;
+	public static final int VERTICAL_OFFSET = 80;
 	public static final int HORIZONTAL_ERROR = 10;
 	public static final int VERTICAL_ERROR = 10;
 	
@@ -41,9 +41,11 @@ public class AlignTowerCommand extends Command
 	
 	protected void initialize()
 	{
+		
+		//  tower x 232.0 
+		// tower y 112.0 
 		if (!Robot.cameraManager.isTowerInRange())
 		{
-			// not in range why bother
 			cancel();
 			return;
 		}
@@ -61,19 +63,21 @@ public class AlignTowerCommand extends Command
 		pidControllerTurn.setAbsoluteTolerance(kToleranceDegrees);
 		pidControllerTurn.setContinuous(true);
 		// get horizontal offset
-		double horizontalOffset = Robot.cameraManager.getTowerXOffset();
-		if (horizontalOffset - HORIZONTAL_OFFSET > HORIZONTAL_ERROR)
-		{
-			// not on target, turn 90 and turn camera 90
-			pidControllerTurn.setSetpoint(90);
-			pidControllerTurn.enable();
-			alignedHorizontal = false;
-			Robot.cameraManager.turnSidewayTower();
-		}
+		alignedHorizontal = true;
+//		double horizontalOffset = Robot.cameraManager.getTowerXOffset();
+//		if (horizontalOffset - HORIZONTAL_OFFSET > HORIZONTAL_ERROR)
+//		{
+//			// not on target, turn 90 and turn camera 90
+//			pidControllerTurn.setSetpoint(90);
+//			pidControllerTurn.enable();
+//			alignedHorizontal = false;
+//			Robot.cameraManager.turnSidewayTower();
+//		}
 	}
 	
 	protected void execute()
 	{
+		Robot.cameraManager.readCameras();
 		if (pidControllerTurn.isEnabled() && pidControllerTurn.onTarget()) // done turning
 		{
 			pidControllerTurn.disable();
@@ -106,7 +110,7 @@ public class AlignTowerCommand extends Command
 				Robot.driveTrain.arcadeDrive(0, 0);
 			} else 
 			{
-				Robot.driveTrain.arcadeDrive((verticalOffset - VERTICAL_OFFSET > 0) ? -power : power, 0);
+				Robot.driveTrain.arcadeDrive((verticalOffset - VERTICAL_OFFSET > 0) ? power : -power, 0);
 			}
 		}
 	}

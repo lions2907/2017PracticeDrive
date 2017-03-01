@@ -7,7 +7,9 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import org.usfirst.frc.team2907.robot.commands.PixyAuto;
 import org.usfirst.frc.team2907.robot.subsystems.CameraManager;
+import org.usfirst.frc.team2907.robot.subsystems.Shooter;
 import org.usfirst.frc.team2907.robot.subsystems.DriveTrain;
 
 /**
@@ -22,6 +24,7 @@ public class Robot extends IterativeRobot
 	/* SUBSYSTEMS */
 	public static final DriveTrain driveTrain = new DriveTrain();
 	public static final CameraManager cameraManager = new CameraManager();
+	public static final Shooter shooter = new Shooter();
 	/* INPUT */
 	public static OI oi;
 
@@ -36,6 +39,7 @@ public class Robot extends IterativeRobot
 	public void robotInit() 
 	{
 		oi = new OI();
+		chooser.addObject("PixyTest", new PixyAuto());
 		SmartDashboard.putData("Auto mode", chooser);
 	}
 
