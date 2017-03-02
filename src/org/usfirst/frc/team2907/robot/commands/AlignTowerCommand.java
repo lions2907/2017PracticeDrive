@@ -23,14 +23,6 @@ public class AlignTowerCommand extends Command
 	
 	private double power;
 	
-	static double kP = 0.08;
-	static double kI = 0.00;
-	static double kD = 0.00;
-	static final double kToleranceDegrees = 1.0f;
-	// pid controller for driving without drift and for turning
-	private PIDController pidControllerTurn;
-	private PIDOutputTurn outputTurn;
-	
 	public AlignTowerCommand(double power)
 	{
 		super("AlignTowerCommand");
@@ -41,7 +33,8 @@ public class AlignTowerCommand extends Command
 	
 	protected void initialize()
 	{
-		
+		alignedHorizontal = false;
+		alignedHorizontal = false;
 		//  tower x 232.0 
 		// tower y 112.0 
 		if (!Robot.cameraManager.isTowerInRange())
@@ -49,42 +42,19 @@ public class AlignTowerCommand extends Command
 			cancel();
 			return;
 		}
-		// reset angle on nav board
-		Robot.driveTrain.getSensorBoard().reset();
-		// get p/i/d set on dashboard
-		kP = Preferences.getInstance().getDouble("kP", .08);
-		kI = Preferences.getInstance().getDouble("kI", 0);
-		kD = Preferences.getInstance().getDouble("kD", 0);
-		// init turn controller
-		outputTurn = new PIDOutputTurn();
-		pidControllerTurn = new PIDController(kP, kI, kD, Robot.driveTrain.getSensorBoard(), outputTurn);
-		pidControllerTurn.setInputRange(-180, 180);
-		pidControllerTurn.setOutputRange(-.5, .5); // turn fast, not driving straight at same time hopefully
-		pidControllerTurn.setAbsoluteTolerance(kToleranceDegrees);
-		pidControllerTurn.setContinuous(true);
-		// get horizontal offset
-		alignedHorizontal = true;
-//		double horizontalOffset = Robot.cameraManager.getTowerXOffset();
-//		if (horizontalOffset - HORIZONTAL_OFFSET > HORIZONTAL_ERROR)
-//		{
-//			// not on target, turn 90 and turn camera 90
-//			pidControllerTurn.setSetpoint(90);
-//			pidControllerTurn.enable();
-//			alignedHorizontal = false;
-//			Robot.cameraManager.turnSidewayTower();
-//		}
+		
+		double horizontalOffset = Robot.cameraManager.getTowerXOffset();
+		if (horizontalOffset - HORIZONTAL_OFFSET > HORIZONTAL_ERROR)
+		{
+			// not on target, turn 90 and turn camera 90
+			alignedHorizontal = false;
+			Robot.cameraManager.turnSidewayTower();
+		}
 	}
 	
 	protected void execute()
 	{
 		Robot.cameraManager.readCameras();
-		if (pidControllerTurn.isEnabled() && pidControllerTurn.onTarget()) // done turning
-		{
-			pidControllerTurn.disable();
-		} else if (pidControllerTurn.isEnabled()) // turning but not done
-		{
-			return;
-		}
 		
 		if (!alignedHorizontal)
 		{
@@ -92,14 +62,10 @@ public class AlignTowerCommand extends Command
 			if (Math.abs(horizontalOffset - HORIZONTAL_OFFSET) < HORIZONTAL_ERROR)
 			{
 				Robot.driveTrain.arcadeDrive(0, 0);
-				Robot.driveTrain.getSensorBoard().reset();
-				pidControllerTurn.setSetpoint(-90);
-				pidControllerTurn.enable();
 				alignedHorizontal = true;
-				Robot.cameraManager.turnStraightTower();
 			} else
 			{
-				Robot.driveTrain.arcadeDrive((horizontalOffset - HORIZONTAL_OFFSET > 0) ? -power : power, 0);
+				Robot.driveTrain.arcadeDrive(0, (horizontalOffset - HORIZONTAL_OFFSET > 0) ? -power : power);
 			}
 		} else if (alignedHorizontal && !alignedVertical)
 		{
@@ -110,7 +76,7 @@ public class AlignTowerCommand extends Command
 				Robot.driveTrain.arcadeDrive(0, 0);
 			} else 
 			{
-				Robot.driveTrain.arcadeDrive((verticalOffset - VERTICAL_OFFSET > 0) ? power : -power, 0);
+				Robot.driveTrain.arcadeDrive((verticalOffset - VERTICAL_OFFSET > 0) ? -power : power, 0);
 			}
 		}
 	}
